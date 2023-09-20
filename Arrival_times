@@ -1,0 +1,40 @@
+import random
+import math
+import time
+from openpyxl import Workbook, load_workbook
+
+# Create a new Excel workbook or load an existing one
+try:
+    workbook = load_workbook("arrival_times.xlsx")
+except FileNotFoundError:
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "Arrival Times"
+    worksheet.append(["Time Step", "Lane 1", "Lane 2", "Lane 3", "Lane 4"])
+    workbook.save("arrival_times.xlsx")
+
+# Initialize cumulative sums for each lane
+cumulative_lane_times = [0] * 4
+
+while True:
+    # Generate a random number between 0 and 1 for each lane
+    lane_random_numbers = [random.random() for _ in range(4)]
+
+    # Calculate arrival times for each lane and update cumulative sums
+    for i in range(4):
+        result = -1.5 * math.log(lane_random_numbers[i])
+        cumulative_lane_times[i] += result
+
+    # Open the workbook and select the worksheet
+    workbook = load_workbook("arrival_times.xlsx")
+    worksheet = workbook.active
+
+    # Append the new data to the worksheet
+    new_row = [worksheet.max_row, *cumulative_lane_times]
+    worksheet.append(new_row)
+
+    # Save the workbook
+    workbook.save("arrival_times.xlsx")
+
+    # Sleep for a while (adjust the delay as needed)
+    time.sleep(1)
