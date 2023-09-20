@@ -1,0 +1,43 @@
+import random
+import math
+import time
+from openpyxl import Workbook
+from openpyxl import load_workbook
+
+# Create or load an existing Excel file
+try:
+    wb = load_workbook("traffic_data.xlsx")
+    sheet = wb.active
+except FileNotFoundError:
+    wb = Workbook()
+    sheet = wb.active
+    sheet.append(["Lane 1", "Lane 2", "Lane 3", "Lane 4"])
+
+while True:
+    # Generate random numbers for each lane
+    random_number_lane1 = random.random()
+    random_number_lane2 = random.random()
+    random_number_lane3 = random.random()
+    random_number_lane4 = random.random()
+
+    # Calculate arrival times for each lane
+    arrival_time_lane1 = -90 * math.log(random_number_lane1)
+    arrival_time_lane2 = -90 * math.log(random_number_lane2)
+    arrival_time_lane3 = -90 * math.log(random_number_lane3)
+    arrival_time_lane4 = -90 * math.log(random_number_lane4)
+
+    print("Lane 1:", arrival_time_lane1)
+    print("Lane 2:", arrival_time_lane2)
+    print("Lane 3:", arrival_time_lane3)
+    print("Lane 4:", arrival_time_lane4)
+
+    # Append the data to the Excel sheet
+    sheet.append(
+        [arrival_time_lane1, arrival_time_lane2, arrival_time_lane3, arrival_time_lane4]
+    )
+
+    # Save the Excel file
+    wb.save("traffic_data.xlsx")
+
+    # Add a delay to control how quickly it runs (optional)
+    time.sleep(1)  # Sleep for 1 second
