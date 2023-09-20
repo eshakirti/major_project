@@ -1,0 +1,52 @@
+import random
+import math
+import time
+from openpyxl import Workbook
+from openpyxl import load_workbook
+
+# Create or load an existing Excel file
+try:
+    wb = load_workbook('traffic_signal_data.xlsx')
+except FileNotFoundError:
+    wb = Workbook()
+
+# Create or select a worksheet for traffic signal data
+ws = wb.active if "Traffic Signal Data" not in wb.sheetnames else wb["Traffic Signal Data"]
+
+# Create headers if the worksheet is empty
+if ws.max_row == 1:
+    ws.append(["Lane 1", "Lane 2", "Lane 3", "Lane 4"])
+
+# Initialize cumulative sums for each lane
+cumulative_lane1 = 0
+cumulative_lane2 = 0
+cumulative_lane3 = 0
+cumulative_lane4 = 0
+
+while True:
+    # Generate random numbers for each lane
+    random_number1 = random.random()
+    random_number2 = random.random()
+    random_number3 = random.random()
+    random_number4 = random.random()
+
+    # Calculate arrival times for each lane
+    arrival_time1 = -90 * math.log(random_number1)
+    arrival_time2 = -90 * math.log(random_number2)
+    arrival_time3 = -90 * math.log(random_number3)
+    arrival_time4 = -90 * math.log(random_number4)
+
+    # Accumulate the results for each lane
+    cumulative_lane1 += arrival_time1
+    cumulative_lane2 += arrival_time2
+    cumulative_lane3 += arrival_time3
+    cumulative_lane4 += arrival_time4
+
+    # Append the data to the Excel worksheet
+    ws.append([cumulative_lane1, cumulative_lane2, cumulative_lane3, cumulative_lane4])
+
+    # Save the Excel file
+    wb.save('traffic_signal_data.xlsx')
+
+    # Add a delay to control how quickly it runs (optional)
+    time.sleep(1)  # Sleep for 1 second
